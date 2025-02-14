@@ -2,90 +2,102 @@ import PropTypes from 'prop-types';
 import { usePDF } from 'react-to-pdf';
 import QRCode from 'react-qr-code';
 import { useState } from 'react';
+import { FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 
-const Ready = ({ ticketData, setStep, resetForm }) => {
+const Ready = ({ ticketData, setStep }) => {
   const { toPDF, targetRef } = usePDF({ filename: 'conference-ticket.pdf' });
-
-  // Generate a 6-digit ticket number
   const [ticketNumber] = useState(
     () => `#${Math.floor(Math.random() * 900000 + 100000)}`
   );
 
-  const handleNewTicket = () => {
-    resetForm();
-    setStep(1);
-  };
-
-  const handleBack = () => setStep(2); // Go back to Attendee Details step
-
-  const buttonStyles = 'px-6 py-2 text-white rounded-md transition-colors';
-
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div ref={targetRef} className="bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-center mb-8 text-blue-600">
-          Tech Innovators Summit 2024
+    <div className="p-4 flex justify-center">
+      <div
+        ref={targetRef}
+        className="bg-[#0A2B2B] text-white rounded-xl shadow-lg p-6 max-w-sm border border-[#19c3c3]"
+      >
+        {/* Header */}
+        <h2 className="text-3xl font-bold text-center mb-1">
+          Techember Fest ’25
         </h2>
+        <p className="text-sm text-gray-300 text-center flex items-center justify-center gap-1">
+          <FaMapMarkerAlt /> 04 Rumens road, Ikoyi, Lagos
+        </p>
+        <p className="text-sm text-gray-300 text-center flex items-center justify-center gap-1">
+          <FaCalendarAlt /> March 15, 2025 | 7:00 PM
+        </p>
 
-        <div className="flex flex-col items-center gap-6 border-2 border-dashed border-blue-200 p-6 rounded-lg">
+        {/* Avatar */}
+        <div className="flex justify-center my-4">
           {ticketData?.avatar ? (
             <img
               src={ticketData.avatar}
               alt="Attendee Avatar"
-              className="w-32 h-32 rounded-full object-cover border-4 border-blue-500"
+              className="w-32 h-32 rounded-lg object-cover border-4 border-[#19c3c3]"
             />
           ) : (
-            <div className="w-32 h-32 rounded-full border-4 border-blue-500 flex items-center justify-center text-gray-500">
+            <div className="w-32 h-32 rounded-lg border-4 border-[#19c3c3] flex items-center justify-center text-gray-500">
               No Avatar
             </div>
           )}
-
-          <div className="text-center">
-            <h3 className="text-2xl font-semibold text-gray-800">
-              {ticketData?.fullName || 'No Name'}
-            </h3>
-            <p className="text-gray-600 mb-2">
-              {ticketData?.email || 'No Email'}
-            </p>
-            {ticketData?.ticketType && (
-              <div className="bg-blue-100 px-3 py-1 rounded-full text-sm font-medium text-blue-800">
-                {ticketData.ticketType.toUpperCase()} TICKET
-              </div>
-            )}
-          </div>
-
-          <div className="text-center mt-4">
-            <div className="text-sm text-gray-500">Ticket Number</div>
-            <div className="text-xl font-bold text-blue-600">
-              {ticketNumber}
-            </div>
-          </div>
         </div>
 
-        <div className="mt-6 flex justify-center">
-          <QRCode value={ticketNumber || ''} size={128} />
+        {/* Attendee Info Table */}
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <table className="w-full text-sm">
+            <tbody>
+              <tr>
+                <td className="text-gray-400">Name:</td>
+                <td className="text-white font-medium">
+                  {ticketData?.fullName || 'No Name'}
+                </td>
+              </tr>
+              <tr>
+                <td className="text-gray-400">Email:</td>
+                <td className="text-white font-medium">
+                  {ticketData?.email || 'No Email'}
+                </td>
+              </tr>
+              <tr>
+                <td className="text-gray-400">Ticket Type:</td>
+                <td className="text-white font-medium">
+                  {ticketData?.ticketType || '-'}
+                </td>
+              </tr>
+              <tr>
+                <td className="text-gray-400">Ticket No:</td>
+                <td className="text-white font-medium">{ticketNumber}</td>
+              </tr>
+              <tr>
+                <td className="text-gray-400">Special Request:</td>
+                <td className="text-white font-medium">
+                  {ticketData?.specialRequest || 'None'}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
 
-      <div className="mt-8 flex gap-4 justify-center">
-        <button
-          onClick={toPDF}
-          className={`${buttonStyles} bg-green-600 hover:bg-green-700`}
-        >
-          Download PDF
-        </button>
-        <button
-          onClick={handleNewTicket}
-          className={`${buttonStyles} bg-blue-600 hover:bg-blue-700`}
-        >
-          Book Another Ticket
-        </button>
-        <button
-          onClick={handleBack}
-          className={`${buttonStyles} bg-gray-600 hover:bg-gray-700`}
-        >
-          Back
-        </button>
+        {/* QR Code */}
+        <div className="flex flex-col items-center my-4">
+          <QRCode value={ticketNumber} size={100} />
+        </div>
+
+        {/* Action Buttons */}
+        <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+          <button
+            onClick={toPDF}
+            className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-600"
+          >
+            Download PDF
+          </button>
+          <button
+            onClick={() => setStep(1)}
+            className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-600"
+          >
+            Book Another Ticket
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -97,9 +109,9 @@ Ready.propTypes = {
     fullName: PropTypes.string,
     email: PropTypes.string,
     ticketType: PropTypes.string,
+    specialRequest: PropTypes.string,
   }).isRequired,
   setStep: PropTypes.func.isRequired,
-  resetForm: PropTypes.func.isRequired,
 };
 
 export default Ready;

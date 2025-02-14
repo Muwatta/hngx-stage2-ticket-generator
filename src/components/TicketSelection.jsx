@@ -36,11 +36,13 @@ const TicketSelection = ({ onNext }) => {
   };
 
   return (
-    <div className="flex flex-col items-center bg-[#0C192C] text-white p-6 rounded-2xl shadow-lg w-full max-w-xl">
+    <div className="flex flex-col items-center bg-[#02191D] text-white p-6 rounded-2xl shadow-lg w-full max-w-xl">
       <h2 className="text-xl font-semibold mb-4">Ticket Selection</h2>
-      <div className="bg-[#11263D] p-4 rounded-xl w-full text-center">
+
+      {/* Event Info Card */}
+      <div className="bg-[#02191D] p-4 rounded-xl w-full text-center">
         <h3 className="text-lg italic font-bold text-gray-300">
-          Algorise Tech Explorers| Cohort &apos;25
+          Techember Fest / ’25 Cohort ’25
         </h3>
         <p className="text-gray-400 text-sm">
           Join us for an unforgettable experience
@@ -50,14 +52,15 @@ const TicketSelection = ({ onNext }) => {
         </p>
       </div>
 
+      {/* Ticket Options */}
       <div className="flex gap-3 mt-4">
         {tickets.map((ticket, index) => (
           <button
             key={index}
             className={`p-3 rounded-lg border transition-all w-32 text-center ${
               selectedTicket === ticket.type
-                ? 'bg-[#1E3A5F] border-[#1E90FF]'
-                : 'bg-[#11263D] border-gray-500 hover:border-white'
+                ? 'bg-[#041E23] border-[#002917]'
+                : 'bg-[#02191D] border-gray-500 hover:border-[#002917]'
             }`}
             onClick={() => setSelectedTicket(ticket.type)}
           >
@@ -72,9 +75,13 @@ const TicketSelection = ({ onNext }) => {
 
       {error && <p className="text-red-500 mt-2">{error}</p>}
 
+      {/* Number of Tickets */}
       <div className="mt-4 w-full">
         <label className="text-sm text-gray-400">Number of Tickets</label>
-        <select className="bg-[#11263D] text-white p-2 rounded-lg w-full mt-1 border border-gray-600">
+        <select
+          className="bg-[#02191D] text-white p-2 rounded-lg w-full mt-1 border border-gray-600"
+          aria-label="Select number of tickets"
+        >
           {[...Array(5).keys()].map(num => (
             <option key={num + 1} value={num + 1}>
               {num + 1}
@@ -83,14 +90,18 @@ const TicketSelection = ({ onNext }) => {
         </select>
       </div>
 
+      {/* Action Buttons */}
       <div className="flex justify-between w-full mt-4">
         <button
-          onClick={() => onNext({})} // Use onNext to handle the Cancel action
+          onClick={() => onNext({})}
           className="px-4 py-2 bg-gray-700 rounded"
         >
           Cancel
         </button>
-        <button onClick={handleNext} className="px-4 py-2 bg-blue-600 rounded">
+        <button
+          onClick={handleNext}
+          className="px-4 py-2 bg-[#62B6CB] text-[#02191D] rounded hover:bg-[#62B6CB]"
+        >
           Next
         </button>
       </div>

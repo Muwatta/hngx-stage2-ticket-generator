@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import CloudinaryUpload from './CloudinaryUpload';
 
@@ -9,46 +9,45 @@ const AttendeeDetails = ({ onNext, onBack }) => {
   const [profilePhoto, setProfilePhoto] = useState('');
   const [error, setError] = useState('');
 
-  const handleNext = () => {
-    if (!name) {
-      setError('Name is required.');
+  const validateEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleNext = useCallback(() => {
+    if (!name.trim() || !email.trim() || !profilePhoto) {
+      setError('All fields are required.');
       return;
     }
-    if (!email) {
-      setError('Email is required.');
-      return;
-    }
-    if (!profilePhoto) {
-      setError('Profile photo URL is required.');
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address.');
       return;
     }
     setError('');
 
-    // Construct the new data to merge into ticketData
-    const attendeeData = {
-      fullName: name,
-      email,
-      specialRequest,
+    // Pass the collected data to the parent via onNext
+    onNext({
+      fullName: name.trim(),
+      email: email.trim(),
+      specialRequest: specialRequest.trim(),
       avatar: profilePhoto,
-    };
-
-    onNext(attendeeData);
-  };
+    });
+  }, [name, email, specialRequest, profilePhoto, onNext]);
 
   return (
-    <div className="attendee-details-container p-6 rounded-xl shadow-lg bg-gray-900 text-white">
-      <h2 className="text-2xl font-semibold mb-4">Attendee Details</h2>
-      <CloudinaryUpload
-        setProfilePhoto={setProfilePhoto}
-        error={error === 'Profile photo URL is required.' ? error : ''}
-      />
+    <div className="max-w-lg mx-auto p-6 bg-[#02191D] text-white rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold mb-4">Attendee Details</h2>
+
+      {/* Image Upload Section */}
+      <div className="bg-[#02191D] p-4 rounded-lg mb-4">
+        <h3 className="text-sm mb-2">Upload Profile Photo</h3>
+        <CloudinaryUpload setProfilePhoto={setProfilePhoto} error={error} />
+      </div>
 
       <input
         type="text"
         placeholder="Enter your name"
         value={name}
         onChange={e => setName(e.target.value)}
-        className="w-full p-2 my-2 rounded bg-gray-800 border border-gray-600"
+        className="w-full p-2 mb-3 rounded bg-[#02191D] border border-gray-500"
+        aria-label="Enter your full name"
       />
 
       <input
@@ -56,34 +55,34 @@ const AttendeeDetails = ({ onNext, onBack }) => {
         placeholder="Enter your email"
         value={email}
         onChange={e => setEmail(e.target.value)}
-        className="w-full p-2 my-2 rounded bg-gray-800 border border-gray-600"
+        className="w-full p-2 mb-3 rounded bg-[#02191D] border border-gray-500"
+        aria-label="Enter your email address"
       />
-
-      {profilePhoto && (
-        <div className="mt-4">
-          <img
-            src={profilePhoto}
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover border-4 border-blue-500"
-          />
-        </div>
-      )}
 
       <textarea
         placeholder="Special request?"
         value={specialRequest}
         onChange={e => setSpecialRequest(e.target.value)}
-        className="w-full p-2 my-2 rounded bg-gray-800 border border-gray-600"
+        className="w-full p-2 mb-3 rounded bg-[#02191D] border border-gray-500"
+        aria-label="Special request?"
       />
 
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+      {error && <p className="text-red-400 mb-3">{error}</p>}
 
       <div className="flex justify-between mt-4">
-        <button onClick={onBack} className="px-4 py-2 bg-gray-700 rounded">
+        <button
+          onClick={onBack}
+          className="px-4 py-2 bg-gray-700 rounded"
+          aria-label="Go to previous step"
+        >
           Back
         </button>
-        <button onClick={handleNext} className="px-4 py-2 bg-blue-600 rounded">
-          Next
+        <button
+          onClick={handleNext}
+          className="px-4 py-2 bg-teal-700 hover:bg-teal-600 rounded"
+          aria-label="Proceed to next step"
+        >
+          Get My Free Ticket
         </button>
       </div>
     </div>

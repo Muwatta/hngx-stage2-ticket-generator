@@ -35,12 +35,10 @@ export default function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000); // Display skeleton loader for 6 seconds
-
+    }, 3000); // shorter time just for demo; adjust as needed
     return () => clearTimeout(timer);
   }, []);
 
-  // handleNext now accepts a data object (defaulting to an empty object)
   const handleNext = (data = {}) => {
     const updatedData = {
       ...ticketData,
@@ -74,9 +72,18 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-900 text-white">
-      <div className="w-full max-w-2xl p-6 rounded-lg shadow-lg bg-gray-800">
-        <ProgressBar currentStep={step} />
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-8"
+      style={{ backgroundColor: '#0A2B2B' }} // Dark teal background
+    >
+      {/* Main Content Card */}
+      <div className="max-w-2xl w-full bg-[#0F3D3D] text-white rounded-lg shadow-lg p-6">
+        {/* Progress Bar Moved Inside the Card */}
+        <div className="mb-4">
+          <ProgressBar currentStep={step} />
+        </div>
+
+        {/* Step Components */}
         {step === 1 && <TicketSelection onNext={handleNext} />}
         {step === 2 && (
           <AttendeeDetails onNext={handleNext} onBack={handleBack} />
