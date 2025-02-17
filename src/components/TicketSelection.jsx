@@ -53,11 +53,11 @@ const TicketSelection = ({ onNext }) => {
       </div>
 
       {/* Ticket Options */}
-      <div className="flex gap-3 mt-4">
+      <div className="ticket-options flex gap-3 mt-4 sm:flex-col">
         {tickets.map((ticket, index) => (
           <button
             key={index}
-            className={`p-3 rounded-lg border transition-all w-32 text-center ${
+            className={`ticket-button p-4 rounded-lg border transition-all w-32 sm:w-full text-center ${
               selectedTicket === ticket.type
                 ? 'bg-[#041E23] border-[#002917]'
                 : 'bg-[#02191D] border-gray-500 hover:border-[#002917]'
@@ -91,18 +91,12 @@ const TicketSelection = ({ onNext }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-between w-full mt-4">
-        <button
-          onClick={() => onNext({})}
-          className="px-4 py-2 bg-gray-700 rounded"
-        >
-          Cancel
-        </button>
+      <div className="flex justify-center w-full mt-4">
         <button
           onClick={handleNext}
-          className="px-4 py-2 bg-[#62B6CB] text-[#02191D] rounded hover:bg-[#62B6CB]"
+          className="px-6 py-5 bg-[#62B6CB] text-[#fff] rounded hover:bg-[#62B6CB]"
         >
-          Next
+          ➡️Next
         </button>
       </div>
     </div>
